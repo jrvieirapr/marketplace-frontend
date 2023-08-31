@@ -1,9 +1,35 @@
 import "./Tipo.css";
 import React from "react";
+import { useState } from "react";
 
 function Tipo() {
+  const [id, setId] = useState();
+  const [descricao, setDescricao] = useState();
 
-  
+  function alterar(e) {
+    setDescricao(e.target.value);
+  }
+
+  function editar(item){
+    setId(item.id)
+    setDescricao(item.descricao)
+  }
+
+  const dados = [
+    {
+      id: 1,
+      descricao: "Calçados",
+      created_at: "2023-08-31 00:00:00",
+      updated_at: "2023-08-31 00:00:00",
+    },
+    {
+      id: 2,
+      descricao: "Tenis",
+      created_at: "2023-08-31 00:00:00",
+      updated_at: "2023-08-31 00:00:00",
+    },
+  ];
+
   return (
     <div>
       <div className="col-6">
@@ -19,6 +45,8 @@ function Tipo() {
                 className="form-control"
                 id="descricao"
                 placeholder="Exemplo: Calçados"
+                value={descricao}
+                onChange={alterar}
               />
             </div>
             <div className="mb-3">
@@ -39,29 +67,27 @@ function Tipo() {
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Criado</th>
+                <th scope="col">Atualizado</th>
+                <th scope="col">Opções</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
+              {dados.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.descricao}</td>
+                  <td>{item.created_at}</td>
+                  <td>{item.updated_at}</td>
+                  <td>
+                  <div className="btn-group" role="group">
+                    <button className="btn btn-primary">Editar</button>
+                    <button className="btn btn-danger">Excluir</button>
+                  </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
