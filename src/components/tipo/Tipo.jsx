@@ -3,16 +3,26 @@ import React from "react";
 import { useState } from "react";
 
 function Tipo() {
-  const [id, setId] = useState();
-  const [descricao, setDescricao] = useState();
+  const [id, setId] = useState(null); // Definir null como valor inicial
+  const [descricao, setDescricao] = useState('');
 
   function alterar(e) {
     setDescricao(e.target.value);
   }
 
+  function salvar(e){
+    e.preventDefault();
+    const item = [descricao]
+    console.log(item)
+  }
+
   function editar(item){
     setId(item.id)
     setDescricao(item.descricao)
+  }
+
+  function deletar(item){
+    console.log(item)
   }
 
   const dados = [
@@ -35,9 +45,9 @@ function Tipo() {
       <div className="col-6">
         <h1>Tipo</h1>
         <div className="d-flex justify-content-center">
-          <form action="">
+          <form onSubmit={salvar}>
             <div className="mb-3">
-              <label for="descricao" className="form-label">
+              <label htmlFor="descricao" className="form-label">
                 Descrição:
               </label>
               <input
@@ -49,7 +59,7 @@ function Tipo() {
                 onChange={alterar}
               />
             </div>
-            <div className="mb-3">
+            <div className="btn-group">
               <button type="submit" className="btn btn-success">
                 Salvar
               </button>
@@ -63,7 +73,7 @@ function Tipo() {
       <div>
         <h1>Lista</h1>
         <div>
-          <table class="table">
+          <table className="table">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -82,8 +92,8 @@ function Tipo() {
                   <td>{item.updated_at}</td>
                   <td>
                   <div className="btn-group" role="group">
-                    <button className="btn btn-primary">Editar</button>
-                    <button className="btn btn-danger">Excluir</button>
+                    <button onClick={ () => editar(item)} className="btn btn-primary">Editar</button>
+                    <button onClick={ () => deletar(item)} className="btn btn-danger">Excluir</button>
                   </div>
                   </td>
                 </tr>
