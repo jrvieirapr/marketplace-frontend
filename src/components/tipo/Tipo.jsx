@@ -25,6 +25,10 @@ function Tipo() {
     console.log(item)
   }
 
+  function carregarDados(){
+    
+  }
+
   const dados = [
     {
       id: 1,
