@@ -1,48 +1,52 @@
 import "./Tipo.css";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../conn/Api";
 
 function Tipo() {
   const [id, setId] = useState(null); // Definir null como valor inicial
-  const [descricao, setDescricao] = useState('');
+  const [descricao, setDescricao] = useState("");
+  const [dados, setDados] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  //Executar algo antes de carregar o componente
+  useEffect(() => {
+    carregarDados();
+  }, []);
 
   function alterar(e) {
     setDescricao(e.target.value);
   }
 
-  function salvar(e){
+  function salvar(e) {
     e.preventDefault();
-    const item = [descricao]
-    console.log(item)
+    const item = { descricao };
+    console.log(item);
   }
 
-  function editar(item){
-    setId(item.id)
-    setDescricao(item.descricao)
+  function editar(item) {
+    setId(item.id);
+    setDescricao(item.descricao);
   }
 
-  function deletar(item){
-    console.log(item)
+  function deletar(item) {
+    console.log(item);
   }
 
-  function carregarDados(){
-    
+  async function carregarDados() {
+    try {
+      const response = await api.get("/tipos");
+      if (response.data) {
+        console.log(response.data.data)
+        setDados(response.data.data);
+        setIsLoading(false);
+      } else {
+        console.error("Resposta da API vazia.");
+      }
+    } catch (error) {
+      console.error("Erro ao pesquisar tipos: ", error);
+    }
   }
-
-  const dados = [
-    {
-      id: 1,
-      descricao: "Calçados",
-      created_at: "2023-08-31 00:00:00",
-      updated_at: "2023-08-31 00:00:00",
-    },
-    {
-      id: 2,
-      descricao: "Tenis",
-      created_at: "2023-08-31 00:00:00",
-      updated_at: "2023-08-31 00:00:00",
-    },
-  ];
 
   return (
     <div>
@@ -77,33 +81,56 @@ function Tipo() {
       <div>
         <h1>Lista</h1>
         <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Descrição</th>
-                <th scope="col">Criado</th>
-                <th scope="col">Atualizado</th>
-                <th scope="col">Opções</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dados.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.descricao}</td>
-                  <td>{item.created_at}</td>
-                  <td>{item.updated_at}</td>
-                  <td>
-                  <div className="btn-group" role="group">
-                    <button onClick={ () => editar(item)} className="btn btn-primary">Editar</button>
-                    <button onClick={ () => deletar(item)} className="btn btn-danger">Excluir</button>
-                  </div>
-                  </td>
+          {isLoading ? (
+            <div>
+              <div className="d-flex align-items-center">
+                <strong>Carregando...</strong>
+                <div
+                  className="spinner-border ml-auto"
+                  role="status"
+                  aria-hidden="true"
+                ></div>
+              </div>
+            </div>
+          ) : (
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Descrição</th>
+                  <th scope="col">Criado</th>
+                  <th scope="col">Atualizado</th>
+                  <th scope="col">Opções</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {dados.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.descricao}</td>
+                    <td>{item.created_at}</td>
+                    <td>{item.updated_at}</td>
+                    <td>
+                      <div className="btn-group" role="group">
+                        <button
+                          onClick={() => editar(item)}
+                          className="btn btn-primary"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => deletar(item)}
+                          className="btn btn-danger"
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
